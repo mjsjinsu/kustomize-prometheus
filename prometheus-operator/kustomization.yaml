@@ -1,4 +1,4 @@
-namespace: zcp-monitoring
+namespace: zcp-system
 
 resources:
   - rbac.yaml
