@@ -1,4 +1,4 @@
-namespace: zcp-system
+namespace: default 
 
 resources:
   - rbac.yaml

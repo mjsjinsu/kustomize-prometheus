@@ -5,7 +5,7 @@ metadata:
   labels:
     k8s-app: prometheus-operator
   name: prometheus-operator
-  namespace: zcp-system 
+  namespace: default 
 spec:
   replicas: 1
   selector:
