@@ -1,0 +1,5 @@
+namespace: zcp-monitoring
+
+resources:
+  - rbac.yaml
+  - deployment.yaml
