@@ -1,3 +1,5 @@
+namespace: zcp-system
+
 resources:
   - rbac.yaml
   - deployment.yaml
