@@ -1,0 +1,14 @@
+namespace: zcp-system
+
+resources:
+  - rbac.yaml
+  - deployment.yaml
+  - service.yaml
+
+patchesJson6902:
+- target:
+    group: monitoring.coreos.com
+    version: v1
+    kind: Prometheus
+    name: prometheus
+  path: patch.yaml
