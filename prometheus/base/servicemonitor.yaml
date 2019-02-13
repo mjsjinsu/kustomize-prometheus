@@ -1,0 +1,16 @@
+kind: ServiceMonitor
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+    prometheus: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: prometheus
+  namespaceSelector:
+    matchNames:
+      - "zcp-system"
+  endpoints:
+    - port: prometheus
+      interval: 10s

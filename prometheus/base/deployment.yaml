@@ -2,6 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
   name: prometheus
+  labels:
+    app: prometheus
+    prometheus: monitoring
 spec:
   alerting:
     alertmanagers:
@@ -15,8 +18,12 @@ spec:
   routePrefix: "/"
   serviceAccountName: prometheus
   serviceMonitorNamespaceSelector: {}
-  serviceMonitorSelector: {}
-  ruleSelector: {}
+  serviceMonitorSelector: 
+    matchLabels:
+      prometheus: monitoring
+  ruleSelector: 
+    matchLabels:
+      prometheus: monitoring
   ruleNamespaceSelector: {}
   resources:
     requests:
