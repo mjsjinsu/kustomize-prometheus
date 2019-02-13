@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: kubelet
+    prometheus: cluster
+  name: kubelet-cadvisor
+spec:
+  selector:
+    matchLabels:
+      k8s-app: kubelet
+  namespaceSelector:
+    matchNames:
+      - "kube-system"
+  endpoints:
+    - port: https-metrics
+      scheme: https
+      interval: 15s
+      honorLabels: true
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      relabelings:
+        - targetLabel: "__address__"
+          replacement: "kubernetes.default.svc:443"
+        - sourceLabels: ["__meta_kubernetes_endpoint_address_target_name"]
+          regex: "(.+)"
+          targetLabel: "__metrics_path__"
+          replacement: "/api/v1/nodes/${1}/proxy/metrics/cadvisor"

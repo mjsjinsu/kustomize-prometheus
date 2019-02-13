@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: "prometheus"
+    prometheus: cluster
+  name: exporter-kubelets
+spec:
+  groups:
+    - name: cadvisor.rules
+      rules:
+        - alert: ContainerMemoryFailcnt
+          expr: rate(container_memory_failcnt{pod_name!=""}[5m]) > 0 
+          for: 10m
+          labels:
+            severity: warning
+            channel: sk-cps-ops            
+          annotations:
+            description: Pod {{$labels.namespace}}/{{$labels.pod_name}} has reached the limits: {{$value}} times within the last 10m
+            summary: Number of memory usage hits limits
