@@ -1,0 +1,38 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: "prometheus"
+    prometheus: cluster
+  name: exporter-kubernetes
+spec:
+  groups:
+    - name: apiserver.rules
+      rules:
+        - alert: K8SApiserverDown
+          expr: absent(up{job="apiserver"} == 1)
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: critical
+          annotations:
+            description: No API servers are reachable or all have disappeared from service discovery
+            summary: No API servers are reachable
+        - alert: APIServerErrorsHigh
+          expr: irate(apiserver_request_count{code=~"^(?:5..)$"}[5m]) / irate(apiserver_request_count[5m]) * 100 > 5
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            summary: API server Errors High
+            description: "API server returns errors for {{$value}}% of requests summary: API server request errors"
+        - alert: APIServerLatencyHigh
+          expr: ((irate(apiserver_request_latencies_sum[5m]) / irate(apiserver_request_latencies_count[5m])) / 1e+06) > 2000
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            summary: API server Latency High
+            description: "API server latency High above 2s (current value: {{ $value }}ms"
