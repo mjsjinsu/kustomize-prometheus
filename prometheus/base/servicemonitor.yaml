@@ -3,7 +3,7 @@ metadata:
   name: prometheus
   labels:
     app: prometheus
-    prometheus: monitoring
+    prometheus: cluster 
 spec:
   selector:
     matchLabels:

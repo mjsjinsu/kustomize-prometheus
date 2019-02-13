@@ -4,6 +4,7 @@ resources:
   - rbac.yaml
   - deployment.yaml
   - service.yaml
+  - servicemonitor.yaml
 
 patchesJson6902:
 - target:

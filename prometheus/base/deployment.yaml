@@ -4,7 +4,7 @@ metadata:
   name: prometheus
   labels:
     app: prometheus
-    prometheus: monitoring
+    prometheus: cluster 
 spec:
   alerting:
     alertmanagers:
@@ -20,10 +20,10 @@ spec:
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: 
     matchLabels:
-      prometheus: monitoring
+      prometheus: cluster 
   ruleSelector: 
     matchLabels:
-      prometheus: monitoring
+      prometheus: cluster 
   ruleNamespaceSelector: {}
   resources:
     requests:
