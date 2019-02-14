@@ -9,7 +9,7 @@ spec:
   groups:
     - name: apiserver.rules
       rules:
-        - alert: K8SApiserverDown
+        - alert: APIServerDown
           expr: absent(up{job="apiserver"} == 1)
           for: 2m
           labels:
