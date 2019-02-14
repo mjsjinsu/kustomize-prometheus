@@ -26,3 +26,5 @@ spec:
           regex: "(.+)"
           targetLabel: "__metrics_path__"
           replacement: "/api/v1/nodes/${1}/proxy/metrics"
+        - targetLabel: "job"
+          replacement: "kubernetes-nodes"

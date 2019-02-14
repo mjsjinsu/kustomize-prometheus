@@ -4,7 +4,7 @@ metadata:
   labels:
     app: "prometheus"
     prometheus: cluster
-  name: exporter-kubelets
+  name: rule-cadvisor 
 spec:
   groups:
     - name: cadvisor.rules

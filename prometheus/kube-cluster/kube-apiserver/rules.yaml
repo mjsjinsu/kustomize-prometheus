@@ -4,7 +4,7 @@ metadata:
   labels:
     app: "prometheus"
     prometheus: cluster
-  name: exporter-kubernetes
+  name: rule-apiserver 
 spec:
   groups:
     - name: apiserver.rules

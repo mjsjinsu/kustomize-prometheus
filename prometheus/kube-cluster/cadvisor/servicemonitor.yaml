@@ -15,7 +15,7 @@ spec:
   endpoints:
     - port: https-metrics
       scheme: https
-      interval: 15s
+      interval: 10s
       honorLabels: true
       tlsConfig:
         caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -27,3 +27,5 @@ spec:
           regex: "(.+)"
           targetLabel: "__metrics_path__"
           replacement: "/api/v1/nodes/${1}/proxy/metrics/cadvisor"
+        - targetLabel: "job"
+          replacement: "kubernetes-cadvisor"
