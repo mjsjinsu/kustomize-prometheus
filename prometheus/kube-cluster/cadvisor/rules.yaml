@@ -16,5 +16,5 @@ spec:
             severity: warning
             channel: sk-cps-ops            
           annotations:
-            description: Pod {{$labels.namespace}}/{{$labels.pod_name}} has reached the limits: {{$value}} times within the last 10m
+            description: "Pod {{$labels.namespace}}/{{$labels.pod_name}} has reached the limits: {{$value}} times within the last 10m"
             summary: Number of memory usage hits limits
