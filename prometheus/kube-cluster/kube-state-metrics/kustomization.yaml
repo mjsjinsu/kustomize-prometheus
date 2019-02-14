@@ -12,3 +12,4 @@ resources:
 - kubernetes/kube-state-metrics-role.yaml
 - kubernetes/kube-state-metrics-service-account.yaml
 - kubernetes/kube-state-metrics-service.yaml
+- rules.yaml

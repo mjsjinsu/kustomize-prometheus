@@ -1,0 +1,92 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: prometheus
+    prometheus: cluster
+  name: rule-kube-state-metrics
+  namespace: zcp-system
+spec:
+  groups:
+  - name: kube-state-metrics.rules
+    rules:
+    - alert: K8SNodeNotReady
+      annotations:
+        description: The Kubelet on {{ $labels.node }} has not checked in with the
+          API, or has set itself to NotReady, for more than 2m
+        summary: Node status is NotReady
+      expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+      for: 2m
+      labels:
+        channel: sk-cps-ops
+        severity: critical
+    - alert: K8SNodeOutOfDisk
+      annotations:
+        description: '{{ $labels.node }} is insufficient free space on the node for
+          adding new pods'
+        summary: Node ran out of disk space.
+      expr: kube_node_status_condition{condition="OutOfDisk",status="true"} == 1
+      for: 2m
+      labels:
+        channel: sk-cps-ops
+        severity: warning
+    - alert: K8SNodeMemoryPressure
+      annotations:
+        description: '{{ $labels.node }} memory is low'
+        summary: Node is under memory pressure.
+      expr: kube_node_status_condition{condition="MemoryPressure",status="true"} ==
+        1
+      for: 2m
+      labels:
+        channel: sk-cps-ops
+        severity: warning
+    - alert: K8SNodePIDPressure
+      annotations:
+        description: '{{ $labels.node }} is too many processes on the node'
+        summary: Node is under PID pressure.
+      expr: kube_node_status_condition{condition="PIDPressure",status="true"} == 1
+            summary: Node is under memory pressure.
+        - alert: K8SNodePIDPressure
+          expr: kube_node_status_condition{condition="PIDPressure",status="true"} == 1
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            description: "{{ $labels.node }} is too many processes on the node"
+            summary: Node is under PID pressure.
+        - alert: K8SNodeDiskPressure
+          expr: kube_node_status_condition{condition="DiskPressure",status="true"} == 1
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            description: "{{ $labels.node }} disk capacity is low"
+            summary: Node is under disk pressure.
+        - alert: PodFrequentlyRestarting
+          expr: increase(kube_pod_container_status_restarts_total[1h]) > 5
+          for: 10m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            summary: Pod is restarting frequently
+            description: Pod {{$labels.namespace}}/{{$labels.pod}} is was restarted {{$value}} times within the last hour
+        - alert: JobFailed
+          expr:  kube_job_failed != 0
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            description: Job {{$labels.namespace}}/{{$labels.job}} has failed
+            summary: Job has failed
+        - alert: DaemonSetsMissScheduled
+          expr: kube_daemonset_status_number_misscheduled > 0
+          for: 10m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            description: A number of daemonsets {{$labels.namespace}}/{{$labels.daemonset}} are running where they are not supposed to run.
+            summary: Daemonsets are not scheduled correctly
