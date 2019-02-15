@@ -5,7 +5,7 @@ metadata:
     app: prometheus
     prometheus: cluster
   name: rule-kube-state-metrics
-  namespace: zcp-system
+  namespace: kube-system
 spec:
   groups:
   - name: kube-state-metrics.rules
