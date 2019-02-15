@@ -5,6 +5,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - servicemonitor.yaml
+  - rules.yaml
 
 patchesJson6902:
 - target:
