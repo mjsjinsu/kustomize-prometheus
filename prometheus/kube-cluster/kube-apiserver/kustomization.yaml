@@ -2,4 +2,4 @@ resources:
   - servicemonitor.yaml
   - rules.yaml
 
-namespace: default
+namespace: zcp-system 

@@ -5,6 +5,7 @@ metadata:
     component: apiserver
     prometheus: cluster
   name: kube-apiserver
+  namespace: kube-system
 spec:
   jobLabel: component
   selector:

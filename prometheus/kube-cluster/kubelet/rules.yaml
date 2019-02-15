@@ -5,6 +5,7 @@ metadata:
     app: "prometheus"
     prometheus: cluster
   name: rule-kubelet 
+  namespace: kube-system
 spec:
   groups:
     - name: kubelet.rules
