@@ -1,0 +1,93 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: "node-exporter"
+    prometheus: cluster
+  name: rule-node-exporter
+  namespace: kube-system
+spec:
+  groups:
+    - name: node-exporter.rules
+      rules:
+        - alert: NodeDown
+          expr: up{job="node-exporter"} == 0
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: critical
+          annotations:
+            summary: "{{$labels.instance}}: node-exporter cannot be scraped"
+            description: "{{$labels.instance}}: Prometheus failed to scrape node for more than 2m"
+        - alert: NodeCPUUsage75
+          expr: (100 - (avg by (instance) (irate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[5m])) * 100)) > 75
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            summary: "{{$labels.instance}}: High CPU usage detected"
+            description: "{{$labels.instance}}: CPU usage is above 75% (current value is: {{ $value }})"
+        - alert: NodeCPUUsage95
+          expr: (100 - (avg by (instance) (irate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[5m])) * 100)) > 95
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: critical
+          annotations:
+            summary: "{{$labels.instance}}: High CPU usage detected"
+            description: "{{$labels.instance}}: CPU usage is above 95% (current value is: {{ $value }})"
+        - alert: NodeLoadAverage5
+          expr: ((node_load5 / count without (cpu, mode) (node_cpu_seconds_total{mode="system"})) > 1)
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            summary: "{{$labels.instance}}: High Load Average detected"
+            description: "{{$labels.instance}}: Load Average is high (current value is: {{ $value }})"
+        - alert: NodeMemoryUsage75
+          expr: (((node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Buffers_bytes - node_memory_Cached_bytes) / (node_memory_MemTotal_bytes) * 100)) > 75
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            summary: "{{$labels.instance}}: High memory usage detected"
+            description: "{{$labels.instance}}: Memory usage is above 75% (current value is: {{ $value }})"
+        - alert: NodeMemoryUsage95
+          expr: (((node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Buffers_bytes - node_memory_Cached_bytes) / (node_memory_MemTotal_bytes) * 100)) > 95
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: critical
+          annotations:
+            summary: "{{$labels.instance}}: High memory usage detected"
+            description: "{{$labels.instance}}: Memory usage is above 95% (current value is: {{ $value }})"
+        - alert: NodeSwapUsage75
+          expr: (((node_memory_SwapTotal_bytes-node_memory_SwapFree_bytes)/node_memory_SwapTotal_bytes)*100) > 75
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            summary: "{{$labels.instance}}: Swap usage detected"
+            description: "{{$labels.instance}}: Swap usage usage is above 75% (current value is: {{ $value }})"
+        - alert: NodeLowRootDisk75
+          expr: ((node_filesystem_size_bytes{mountpoint="/", fstype!~"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs"} - node_filesystem_free_bytes{mountpoint="/", fstype!~"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs"} ) / node_filesystem_size_bytes{mountpoint="/", fstype!~"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs"} * 100) > 75
+          for: 30m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            summary: "{{$labels.instance}}: Low Root disk space"
+            description: "{{$labels.instance}}: Root disk usage is above 75% (current value is: {{ $value }})"
+        - alert: NodeLowRootDisk95
+          expr: ((node_filesystem_size_bytes{mountpoint="/", fstype!~"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs"} - node_filesystem_free_bytes{mountpoint="/", fstype!~"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs"} ) / node_filesystem_size_bytes{mountpoint="/", fstype!~"rootfs|selinuxfs|autofs|rpc_pipefs|tmpfs"} * 100) > 95
+          for: 30m
+          labels:
+            channel: sk-cps-ops
+            severity: critical
+          annotations:
+            summary: "{{$labels.instance}}: Low Root disk space"
+            description: "{{$labels.instance}}: Root disk usage is above 95% (current value is: {{ $value }})"

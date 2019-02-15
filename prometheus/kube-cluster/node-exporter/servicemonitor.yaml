@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: node-exporter
+    prometheus: cluster
+  name: node-exporter
+  namespace: kube-system
+spec:
+  jobLabel: component
+  namespaceSelector:
+    matchNames:
+    - zcp-system
+  selector:
+    matchLabels:
+      app: node-exporter
+  endpoints:
+  - interval: 10s
+    port: metrics

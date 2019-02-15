@@ -1,0 +1,7 @@
+resources:
+  - daemonset.yaml
+  - rules.yaml
+  - service.yaml
+  - servicemonitor.yaml
+
+namespace: zcp-system
