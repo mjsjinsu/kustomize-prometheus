@@ -5,6 +5,7 @@ metadata:
     k8s-app: kubelet
     prometheus: cluster
   name: kubelet-cadvisor
+  namespace: kube-system
 spec:
   selector:
     matchLabels:

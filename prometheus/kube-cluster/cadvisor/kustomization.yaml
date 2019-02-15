@@ -2,4 +2,4 @@ resources:
   - servicemonitor.yaml
   - rules.yaml
 
-namespace: kube-system
+namespace: zcp-system 
