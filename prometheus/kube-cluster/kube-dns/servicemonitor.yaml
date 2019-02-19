@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: kube-dns
+    prometheus: cluster
+  name: kube-dns
+  namespace: zcp-system
+spec:
+  endpoints:
+  - interval: 10s
+    targetPort: 10054
+  - interval: 10s
+    targetPort: 10055
+  namespaceSelector:
+    matchNames:
+    - kube-system
+  selector:
+    matchLabels:
+      k8s-app: kube-dns
