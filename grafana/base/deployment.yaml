@@ -1,14 +1,14 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: grafana-deployment
+  name: grafana
   namespace: kube-system 
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        component: grafana
+        app: grafana
     spec:
       securityContext:
         runAsUser: 472

@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: grafana
+    prometheus: cluster
+  name: grafana
+  namespace: kube-system
+spec:
+  namespaceSelector:
+    matchNames:
+    - zcp-system
+  selector:
+    matchLabels:
+      app: grafana
+  endpoints:
+  - interval: 10s
+    port: metrics
