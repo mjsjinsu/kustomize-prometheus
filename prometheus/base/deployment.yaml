@@ -12,6 +12,9 @@ spec:
       - namespace: zcp-system
         name: alertmanager
         port: http
+  additionalScrapeConfigs:
+    name: additional-scrape-configs 
+    key: prometheus-additional.yaml
   baseImage: "prom/prometheus"
   paused: false
   replicas: 1
@@ -29,6 +32,8 @@ spec:
   resources:
     requests:
       memory: 1Gi
+  externalLabels:
+    env: sk-cps-ops-dev
   enableAdminAPI: true
   retention: 15d
   scrapeInterval: 10s

@@ -1,0 +1,155 @@
+- job_name: 'kubernetes-service-endpoints'
+
+  kubernetes_sd_configs:
+  - role: endpoints
+
+  relabel_configs:
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+    action: keep
+    regex: true
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+    action: replace
+    target_label: __scheme__
+    regex: (https?)
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+    action: replace
+    target_label: __metrics_path__
+    regex: (.+)
+  - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+    action: replace
+    target_label: __address__
+    regex: ([^:]+)(?::\d+)?;(\d+)
+    replacement: $1:$2
+  - action: labelmap
+    regex: __meta_kubernetes_service_label_(.+)
+  - source_labels: [__meta_kubernetes_namespace]
+    action: replace
+    target_label: namespace
+  - source_labels: [__meta_kubernetes_service_name]
+    action: replace
+    target_label: service
+
+- job_name: 'kubernetes-pods'
+
+  kubernetes_sd_configs:
+  - role: pod
+
+  relabel_configs:
+  # Example relabel to scrape only pods that have
+  # "example.io/should_be_scraped = true" annotation.
+  #  - source_labels: [__meta_kubernetes_pod_annotation_example_io_should_be_scraped]
+  #    action: keep
+  #    regex: true
+  #
+  # Example relabel to customize metric path based on pod
+  # "example.io/metric_path = <metric path>" annotation.
+  #  - source_labels: [__meta_kubernetes_pod_annotation_example_io_metric_path]
+  #    action: replace
+  #    target_label: __metrics_path__
+  #    regex: (.+)
+  #
+  # Example relabel to scrape only single, desired port for the pod
+  # based on pod "example.io/scrape_port = <port>" annotation.
+  # Note that __address__ is modified here, so if pod containers' ports
+  # are declared, they all will be ignored.
+  #  - source_labels: [__address__, __meta_kubernetes_pod_annotation_example_io_scrape_port]
+  #    action: replace
+  #    regex: ([^:]+)(?::\d+)?;(\d+)
+  #    replacement: $1:$2
+  #    target_label: __address__
+  - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+    action: keep
+    regex: true
+  - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
+    separator: ;
+    regex: (https?)
+    target_label: __scheme__
+    replacement: $1
+    action: replace
+  - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+    separator: ;
+    regex: (.+)
+    target_label: __metrics_path__
+    replacement: $1
+    action: replace
+  - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+    separator: ;
+    regex: ([^:]+)(?::\d+)?;(\d+)
+    target_label: __address__
+    replacement: $1:$2
+    action: replace
+  - action: labelmap
+    regex: __meta_kubernetes_pod_label_(.+)
+  - source_labels: [__meta_kubernetes_namespace]
+    action: replace
+    target_label: kubernetes_namespace
+  - source_labels: [__meta_kubernetes_pod_name]
+    action: replace
+    target_label: kubernetes_pod_name
+
+- job_name: 'kubernetes-ingress'
+
+  metrics_path: /probe
+
+  params:
+    module: [http_2xx]
+
+  kubernetes_sd_configs:
+  - role: ingress
+
+  relabel_configs:
+  - source_labels: [__meta_kubernetes_ingress_annotation_prometheus_io_probe]
+    action: keep
+    regex: true
+  - source_labels: [__meta_kubernetes_ingress_scheme,__address__,__meta_kubernetes_ingress_path]
+    regex: (.+);(.+);(.+)
+    replacement: ${1}://${2}${3}
+    target_label: __param_target
+  - target_label: __address__
+    replacement: blackbox:9115
+  - source_labels: [__param_target]
+    target_label: instance
+  - action: labelmap
+    regex: __meta_kubernetes_ingress_(.+)
+  - source_labels: [__meta_kubernetes_namespace]
+    target_label: namespace
+  - source_labels: [__meta_kubernetes_ingress_path]
+    target_label: pod
+  - source_labels: [__meta_kubernetes_ingress_name]
+    target_label: kubernetes_name
+
+- job_name: 'blackbox-monitoring'
+
+  metrics_path: /probe
+
+  params:
+    module: [http_2xx]
+
+  static_configs:
+    - targets:
+      - http://grafana:3000/api/health
+      - http://prometheus:9090/-/healthy
+      - http://alertmanager:9093/-/healthy
+
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: blackbox:9115
+
+
+#- job_name: 'etcd'
+
+#  static_configs:
+#  - targets:
+#    - 8.8.8.8:53
+
+#  tls_config:
+#    ca_file: /etc/config/etcd-ca
+#    cert_file: /etc/config/etcd-cert
+#    key_file: /etc/config/etcd-key
+#    insecure_skip_verify: true
+
+#  scheme: https
