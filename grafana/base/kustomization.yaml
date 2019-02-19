@@ -26,7 +26,7 @@ configMapGenerator:
   files:
   - configs/dashboards/systems/system-overview.json
   - configs/dashboards/systems/system-disk-space.json           
-  - configs/dashboards/systems/system-node-exporter-fulls.json  
+#  - configs/dashboards/systems/system-node-exporter-fulls.json  
   - configs/dashboards/systems/system-usage-overview.json
 
 - name: monitoring-grafana-dashboard-cluster
