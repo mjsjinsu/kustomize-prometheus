@@ -1,0 +1,105 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: grafana-deployment
+  namespace: kube-system 
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: grafana
+    spec:
+      securityContext:
+        runAsUser: 472
+        fsGroup: 472
+      containers:
+      - image: grafana/grafana:5.4.3
+        name: grafana
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi        
+        env:
+        - name: GF_SECURITY_ADMIN_USER
+          value: admin
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: admin
+        - name: GF_INSTALL_PLUGINS
+          value: grafana-clock-panel,grafana-worldmap-panel
+        ports:
+        - containerPort: 3000
+          name: grafana
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/health
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 30
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/health
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 30
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: grafana-storage
+        - mountPath: /etc/grafana
+          name: config-volume
+        - mountPath: /var/lib/grafana/dashboards/system
+          name: dashboard-system-volume
+        - mountPath: /var/lib/grafana/dashboards/cluster
+          name: dashboard-cluster-volume
+        - mountPath: /var/lib/grafana/dashboards/container
+          name: dashboard-container-volume
+        - mountPath: /var/lib/grafana/dashboards/addon
+          name: dashboard-addon-volume
+        - mountPath: /etc/grafana/provisioning/dashboards
+          name: config-volume-provisioning
+        - mountPath: /etc/grafana/provisioning/datasources
+          name: config-volume-provisioning-prometheus 
+      volumes:
+      - name: grafana-storage
+        persistentVolumeClaim:
+          claimName: grafana-data
+      - name: dashboard-system-volume
+        configMap:
+          defaultMode: 420
+          name: monitoring-grafana-dashboard-system 
+      - name: dashboard-cluster-volume
+        configMap:
+          defaultMode: 420
+          name: monitoring-grafana-dashboard-cluster
+      - name: dashboard-container-volume
+        configMap:
+          defaultMode: 420
+          name: monitoring-grafana-dashboard-container
+      - name: dashboard-addon-volume
+        configMap:
+          defaultMode: 420
+          name: monitoring-grafana-dashboard-addon
+      - name: config-volume
+        configMap:
+          defaultMode: 420
+          name: grafana-config 
+      - name: config-volume-provisioning
+        configMap:
+          defaultMode: 420
+          name: grafana-dashboards 
+      - name: config-volume-provisioning-prometheus
+        configMap:
+          defaultMode: 420
+          name: grafana-datasource-prometheus 

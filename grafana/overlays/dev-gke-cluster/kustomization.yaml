@@ -1,0 +1,28 @@
+bases:
+- ../../base
+
+namespace: zcp-system
+
+namePrefix: dev-gke-
+nameSuffix: 
+
+resources:
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- name: grafana-config
+  behavior: replace
+  files:
+  - configs/grafana.ini
+
+- name: grafana-datasource-prometheus
+  behavior: replace
+  files:
+  - configs/datasource.yaml
+
+- name: grafana-dashboards
+  behavior: replace
+  files:
+  - configs/dashboard.yaml

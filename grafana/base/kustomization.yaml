@@ -1,0 +1,49 @@
+namespace: zcp-system
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - pvc.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true 
+
+configMapGenerator:
+- name: grafana-config
+  files:
+  - configs/grafana.ini
+
+- name: grafana-datasource-prometheus
+  files:
+  - configs/datasource.yaml
+
+- name: grafana-dashboards
+  files:
+  - configs/dashboard.yaml
+
+- name: monitoring-grafana-dashboard-system 
+  files:
+  - configs/dashboards/systems/system-overview.json
+  - configs/dashboards/systems/system-disk-space.json           
+  - configs/dashboards/systems/system-node-exporter-fulls.json  
+  - configs/dashboards/systems/system-usage-overview.json
+
+- name: monitoring-grafana-dashboard-cluster
+  files:
+  - configs/dashboards/clusters/kubernetes-cluster-overview.json 
+  - configs/dashboards/clusters/kubernetes-resource-requests.json
+  - configs/dashboards/clusters/kubernetes-performance-overview.json
+  - configs/dashboards/clusters/etcd-cluster.json
+
+- name: monitoring-grafana-dashboard-container
+  files:
+  - configs/dashboards/containers/kubernetes-pod-overview.json
+  - configs/dashboards/containers/kubernetes-deployment-overview.json
+  - configs/dashboards/containers/kubernetes-daemonset-overview.json
+  - configs/dashboards/containers/kubernetes-statefulset-overview.json
+
+- name: monitoring-grafana-dashboard-addon
+  files:
+  - configs/dashboards/addons/elasticsearch.json
+  - configs/dashboards/addons/zcp-service-status.json
+  - configs/dashboards/addons/spring-boot-micrometer.json
