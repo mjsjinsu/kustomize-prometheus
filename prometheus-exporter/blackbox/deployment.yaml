@@ -1,0 +1,31 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: blackbox-exporter
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blackbox-exporter
+  template:
+    metadata:
+      labels:
+        app: blackbox-exporter
+    spec:
+      containers:
+        - image: prom/blackbox-exporter:v0.13.0
+          args:
+            - "--config.file=/etc/config/blackbox.yml"
+          name: blackbox-exporter
+          ports:
+          - containerPort: 9115
+            name: metrics
+          volumeMounts:
+            - name: blackbox-config-volume
+              mountPath: /etc/config/
+      volumes:
+        - name: blackbox-config-volume
+          configMap:
+            defaultMode: 420
+            name: blackbox-exporter-config

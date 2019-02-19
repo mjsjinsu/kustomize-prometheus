@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: blackbox-exporter
+    prometheus: cluster
+  name: blackbox-exporter
+  namespace: kube-system
+spec:
+  namespaceSelector:
+    matchNames:
+    - zcp-system
+  selector:
+    matchLabels:
+      app: blackbox-exporter
+  endpoints:
+  - interval: 10s
+    port: metrics
