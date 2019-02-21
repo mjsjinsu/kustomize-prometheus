@@ -7,7 +7,7 @@ namePrefix: dev-gke-
 nameSuffix:
 
 resources:
-- ingress.yaml
+#- ingress.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
