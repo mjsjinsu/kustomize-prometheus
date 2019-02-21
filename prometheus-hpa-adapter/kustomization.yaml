@@ -1,0 +1,8 @@
+namespace: zcp-system
+
+resources:
+  - custom-metrics-apiservice.yaml
+  - custom-metrics-config-map.yaml
+  - rbac.yaml
+  - deployment.yaml
+  - service.yaml

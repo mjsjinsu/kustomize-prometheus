@@ -1,0 +1,101 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: custom-metrics-apiserver
+  namespace: custom-metrics
+---
+# Source: prometheus-adapter/templates/custom-metrics-cluster-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: prometheus-adapter
+  name: prometheus-adapter-server-resources
+rules:
+- apiGroups:
+  - custom.metrics.k8s.io
+  resources: ["*"]
+  verbs: ["*"]
+---
+# Source: prometheus-adapter/templates/custom-metrics-resource-reader-cluster-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: prometheus-adapter
+  name: prometheus-adapter-resource-reader
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - pods
+  - services
+  - configmaps
+  verbs:
+  - get
+  - list
+---
+# Source: prometheus-adapter/templates/custom-metrics-apiserver-auth-delegator-cluster-role-binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: prometheus-adapter
+  name: prometheus-adapter:system:auth-delegator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  name: custom-metrics-apiserver 
+  namespace: custom-metrics
+---
+# Source: prometheus-adapter/templates/custom-metrics-apiserver-resource-reader-cluster-role-binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: prometheus-adapter
+  name: prometheus-adapter-resource-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-adapter-resource-reader
+subjects:
+- kind: ServiceAccount
+  name: custom-metrics-apiserver 
+  namespace: custom-metrics 
+---
+# Source: prometheus-adapter/templates/hpa-custom-metrics-cluster-role-binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: prometheus-adapter
+  name: prometheus-adapter-hpa-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-adapter-server-resources
+subjects:
+- kind: ServiceAccount
+  name: custom-metrics-apiserver 
+  namespace: custom-metrics 
+---
+# Source: prometheus-adapter/templates/custom-metrics-apiserver-auth-reader-role-binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app: prometheus-adapter
+  name: prometheus-adapter-auth-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: extension-apiserver-authentication-reader
+subjects:
+- kind: ServiceAccount
+  name: custom-metrics-apiserver 
+  namespace: custom-metrics

@@ -1,0 +1,16 @@
+# Source: prometheus-adapter/templates/custom-metrics-apiserver-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: prometheus-adapter
+  name: custom-metrics-apiserver 
+  namespace: custom-metrics 
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: https
+  selector:
+    app: prometheus-adapter
+  type: ClusterIP

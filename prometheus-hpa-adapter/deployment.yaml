@@ -1,0 +1,62 @@
+# Source: prometheus-adapter/templates/custom-metrics-apiserver-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus-adapter
+  name: custom-metrics-apiserver 
+  namespace: custom-metrics 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-adapter
+  template:
+    metadata:
+      labels:
+        app: prometheus-adapter
+      name: prometheus-adapter
+    spec:
+      serviceAccountName: custom-metrics-apiserver 
+      containers:
+      - name: prometheus-adapter
+        image: "mjsjinsu/k8s-prometheus-adapter-amd64:v0.4.1"
+        imagePullPolicy: IfNotPresent
+        args:
+        - /adapter
+        - --secure-port=6443
+        - --cert-dir=/tmp/cert
+        - --logtostderr=true
+        - --prometheus-url=http://prometheus.zcp-system.svc:9090
+        - --metrics-relist-interval=1m
+        - --v=4
+        - --config=/etc/adapter/config.yaml
+        ports:
+        - containerPort: 6443
+          name: https
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: https
+            scheme: HTTPS
+          initialDelaySeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: https
+            scheme: HTTPS
+          initialDelaySeconds: 30
+        securityContext:
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /etc/adapter/
+          name: config
+          readOnly: true
+        - mountPath: /tmp
+          name: tmp
+      volumes:
+      - name: config
+        configMap:
+          name: adapter-config 
+      - name: tmp
+        emptyDir: {}
