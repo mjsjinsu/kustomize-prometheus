@@ -15,5 +15,5 @@
   value: 15d
 
 - op: replace
-  path: /spec/externalLabels
+  path: /spec/externalLabels/env
   value: dev-cluster
