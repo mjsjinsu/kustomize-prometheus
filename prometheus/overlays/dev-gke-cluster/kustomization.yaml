@@ -1,0 +1,27 @@
+bases:
+- ../../base
+
+namespace: zcp-system
+
+namePrefix: dev-gke-
+nameSuffix:
+
+resources:
+- ingress.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+patchesJson6902:
+- target:
+    group: monitoring.coreos.com
+    version: v1
+    kind: Prometheus
+    name: prometheus
+  path: patch-prometheus.yaml
+
+- target:
+    version: v1
+    kind: Service 
+    name: prometheus
+  path: patch-service.yaml

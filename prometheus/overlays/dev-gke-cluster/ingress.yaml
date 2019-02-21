@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: promethues-ingress
+  namespace: kube-system
+spec:
+  rules:
+  - host: prometheus.example.sk.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: prometheus-service
+          servicePort: 9090

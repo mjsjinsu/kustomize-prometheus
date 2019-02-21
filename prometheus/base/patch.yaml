@@ -1,3 +1,0 @@
-- op: replace
-  path: /spec/storage/volumeClaimTemplate/spec/storageClassName
-  value: standard

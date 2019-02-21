@@ -1,0 +1,19 @@
+- op: replace
+  path: /spec/resources/requests/memory
+  value: 1Gi
+
+- op: replace
+  path: /spec/storage/volumeClaimTemplate/spec/storageClassName
+  value: standard
+
+- op: replace
+  path: /spec/storage/volumeClaimTemplate/spec/resources/requests/storage
+  value: 30Gi
+
+- op: replace
+  path: /spec/retention
+  value: 15d
+
+- op: replace
+  path: /spec/externalLabels
+  value: env-test 
