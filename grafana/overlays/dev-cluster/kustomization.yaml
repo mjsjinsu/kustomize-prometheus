@@ -3,7 +3,7 @@ bases:
 
 namespace: zcp-system
 
-namePrefix: dev-gke-
+namePrefix: 
 nameSuffix: 
 
 resources:
