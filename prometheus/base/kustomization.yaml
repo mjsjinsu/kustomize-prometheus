@@ -1,4 +1,4 @@
-namespace: kube-system 
+namespace: monitoring 
 
 resources:
   - rbac.yaml

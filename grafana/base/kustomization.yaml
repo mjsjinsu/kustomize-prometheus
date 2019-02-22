@@ -1,4 +1,4 @@
-namespace: zcp-system
+namespace: monitoring 
 
 resources:
   - deployment.yaml
