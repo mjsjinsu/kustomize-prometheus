@@ -1,4 +1,4 @@
-namespace: zcp-system
+namespace: kube-system 
 
 resources:
   - rbac.yaml
