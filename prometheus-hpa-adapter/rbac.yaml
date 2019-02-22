@@ -91,6 +91,7 @@ metadata:
   labels:
     app: prometheus-adapter
   name: prometheus-adapter-auth-reader
+  namespace: custom-metrics 
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

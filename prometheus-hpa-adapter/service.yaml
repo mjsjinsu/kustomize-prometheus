@@ -5,7 +5,7 @@ metadata:
   labels:
     app: prometheus-adapter
   name: custom-metrics-apiserver 
-  namespace: custom-metrics 
+  namespace: custom-metrics
 spec:
   ports:
   - port: 443
