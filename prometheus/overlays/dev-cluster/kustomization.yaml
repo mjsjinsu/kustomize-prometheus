@@ -1,8 +1,6 @@
 bases:
 - ../../base
 
-namespace: zcp-system
-
 resources:
 #- ingress.yaml
 
