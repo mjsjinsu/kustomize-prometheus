@@ -106,6 +106,15 @@ spec:
       annotations:
         description: Pod {{$labels.pod}} in namespace {{$labels.namespace}} has a termination status other than completed.
         summary: Pod was terminated status
+    - alert: PodNotReady 
+      expr: sum by (namespace, pod, phase) (kube_pod_status_phase{job="kube-state-metrics", phase!="Running", phase!="Succeeded"}) > 0
+      for: 1h
+      labels:
+        channel: sk-cps-ops
+        severity: warning
+      annotations:
+        description: Pod {{ $labels.namespace }}/{{ $labels.pod }} has been in a non-ready state for longer than an hour.
+        summary: Pod has non-ready status
     - alert: DaemonSetsMissScheduled
       expr: kube_daemonset_status_number_misscheduled > 0
       for: 10m
