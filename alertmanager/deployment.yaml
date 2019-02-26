@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  name: alertmanager 
+  namespace: kube-system
+spec:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+  baseImage: prom/alertmanager
+  version: v0.16.1
+  logLevel: info

@@ -1,0 +1,8 @@
+namespace: zcp-system 
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - servicemonitor.yaml
+  - rules.yaml
+  - secret-alertmanager.yaml 

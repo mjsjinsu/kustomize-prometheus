@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: alertmanager 
+  namespace: kube-system
+  labels:
+    app: alertmanager 
+    prometheus: cluster 
+spec:
+  selector:
+    matchLabels:
+      app: alertmanager 
+  namespaceSelector:
+    matchNames:
+      - "zcp-system"
+  endpoints:
+    - port: web 
+      interval: 10s
