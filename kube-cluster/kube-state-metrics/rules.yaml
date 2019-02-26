@@ -55,6 +55,24 @@ spec:
       annotations:
         description: "{{ $labels.node }} disk capacity is low"
         summary: Node is under disk pressure.
+    - alert: K8SCPUOvercommit
+      expr: 100 * sum(kube_pod_container_resource_requests_cpu_cores) by (node) / sum(kube_node_status_allocatable_cpu_cores) by (node) > 90
+      for: 2m
+      labels:
+        channel: sk-cps-ops
+        severity: warning
+      annotations:
+        description: {{ $labels.node }} has overcommitted CPU resource requests for Pods and cannot tolerate node failure.
+        summary: Node is under CPU Overcommit
+    - alert: K8SMemoryOvercommit
+      expr: 100 * sum(kube_pod_container_resource_requests_memory_bytes) by (node) / sum(kube_node_status_allocatable_memory_bytes) by (node) > 90
+      for: 2m
+      labels:
+        channel: sk-cps-ops
+        severity: warning
+      annotations:
+        description: {{ $labels.node }} has overcommitted memory resource requests for Pods and cannot tolerate node failure.
+        summary: Node is under Memory Overcommit
     - alert: PodFrequentlyRestarting
       expr: increase(kube_pod_container_status_restarts_total[1h]) > 5
       for: 10m
