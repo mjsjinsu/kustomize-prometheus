@@ -62,7 +62,7 @@ spec:
         channel: sk-cps-ops
         severity: warning
       annotations:
-        description: {{ $labels.node }} has overcommitted CPU resource requests for Pods and cannot tolerate node failure.
+        description: '{{ $labels.node }} has overcommitted CPU resource requests for Pods and cannot tolerate node failure'
         summary: Node is under CPU Overcommit
     - alert: K8SMemoryOvercommit
       expr: 100 * sum(kube_pod_container_resource_requests_memory_bytes) by (node) / sum(kube_node_status_allocatable_memory_bytes) by (node) > 90
@@ -71,7 +71,7 @@ spec:
         channel: sk-cps-ops
         severity: warning
       annotations:
-        description: {{ $labels.node }} has overcommitted memory resource requests for Pods and cannot tolerate node failure.
+        description: '{{ $labels.node }} has overcommitted memory resource requests for Pods and cannot tolerate node failure'
         summary: Node is under Memory Overcommit
     - alert: PodFrequentlyRestarting
       expr: increase(kube_pod_container_status_restarts_total[1h]) > 5
@@ -81,14 +81,14 @@ spec:
         severity: warning
       annotations:
         summary: Pod is restarting frequently
-        description: Pod {{$labels.namespace}}/{{$labels.pod}} is was restarted {{$value}} times within the last hour
+        description: 'Pod {{ $labels.namespace }}/{{ $labels.pod }} is was restarted {{ $value }} times within the last hour'
     - alert: JobFailed
       expr: sum_over_time(kube_job_status_failed{job="kube-state-metrics"}[1h]) > 0
       labels:
         channel: sk-cps-ops
         severity: warning
       annotations:
-        description: Job {{$labels.namespace}}/{{$labels.job}} has failed for some reason 
+        description: Job '{{ $labels.namespace }}/{{ $labels.job }} has failed for some reason' 
         summary: Job has failed
     - alert: PodStatusWaiting
       expr: sum_over_time(kube_pod_container_status_waiting_reason{reason!="ContainerCreating"}[1h]) > 0 
@@ -96,7 +96,7 @@ spec:
         channel: sk-cps-ops
         severity: warning
       annotations:
-        description: Pod {{$labels.pod}} in namespace {{$labels.namespace}} has a waiting status
+        description: Pod '{{ $labels.pod }} in namespace {{ $labels.namespace }} has a waiting status'
         summary: Pod status waiting 
     - alert: PodStatusTerminated
       expr: sum_over_time(kube_pod_container_status_terminated_reason{reason!="Completed"}[1h]) > 0
@@ -104,7 +104,7 @@ spec:
         channel: sk-cps-ops
         severity: warning
       annotations:
-        description: Pod {{$labels.pod}} in namespace {{$labels.namespace}} has a termination status other than completed.
+        description: 'Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has a termination status other than completed'
         summary: Pod was terminated status
     - alert: PodNotReady 
       expr: sum by (namespace, pod, phase) (kube_pod_status_phase{job="kube-state-metrics", phase!="Running", phase!="Succeeded"}) > 0
@@ -113,7 +113,7 @@ spec:
         channel: sk-cps-ops
         severity: warning
       annotations:
-        description: Pod {{ $labels.namespace }}/{{ $labels.pod }} has been in a non-ready state for longer than an hour.
+        description: 'Pod {{ $labels.namespace }}/{{ $labels.pod }} has been in a non-ready state for longer than an hour'
         summary: Pod has non-ready status
     - alert: DaemonSetsMissScheduled
       expr: kube_daemonset_status_number_misscheduled > 0
@@ -122,7 +122,7 @@ spec:
         channel: sk-cps-ops
         severity: warning
       annotations:
-        description: A number of daemonsets {{$labels.namespace}}/{{$labels.daemonset}} are running where they are not supposed to run.
+        description: 'A number of daemonsets {{ $labels.namespace }}/{{ $labels.daemonset }} are running where they are not supposed to run'
         summary: Daemonsets are not scheduled correctly
     - alert: K8SQuotaExceeded
       expr: 100 * kube_resourcequota{job="kube-state-metrics", type="used"} / ignoring(instance, job, type) (kube_resourcequota{job="kube-state-metrics", type="hard"} > 0) > 90
@@ -131,5 +131,5 @@ spec:
         channel: sk-cps-ops
         severity: warning
       annotations:
-        description: Namespace {{ $labels.namespace }} is using {{ printf "%0.0f" $value }}% of its {{ $labels.resource }} quota.
+        description: 'Namespace {{ $labels.namespace }} is using {{ printf "%0.0f" $value }}% of its {{ $labels.resource }} quota'
         summary: Namespace Quota wil be Exceeded
