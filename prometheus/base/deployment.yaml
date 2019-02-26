@@ -11,7 +11,7 @@ spec:
     alertmanagers:
       - namespace: zcp-system
         name: alertmanager
-        port: http
+        port: web 
   additionalScrapeConfigs:
     name: additional-scrape-configs 
     key: prometheus-additional.yaml
