@@ -65,13 +65,29 @@ spec:
         summary: Pod is restarting frequently
         description: Pod {{$labels.namespace}}/{{$labels.pod}} is was restarted {{$value}} times within the last hour
     - alert: JobFailed
-      expr:  kube_job_failed != 0
+      expr: sum_over_time(kube_job_status_failed{job="kube-state-metrics"}[1h]) > 0
       labels:
         channel: sk-cps-ops
         severity: warning
       annotations:
-        description: Job {{$labels.namespace}}/{{$labels.job}} has failed
+        description: Job {{$labels.namespace}}/{{$labels.job}} has failed for some reason 
         summary: Job has failed
+    - alert: PodStatusWaiting
+      expr: sum_over_time(kube_pod_container_status_waiting_reason{reason!="ContainerCreating"}[1h]) > 0 
+      labels:
+        channel: sk-cps-ops
+        severity: warning
+      annotations:
+        description: Pod {{$labels.pod}} in namespace {{$labels.namespace}} has a waiting status
+        summary: Pod status waiting 
+    - alert: PodStatusTerminated
+      expr: sum_over_time(kube_pod_container_status_terminated_reason{reason!="Completed"}[1h]) > 0
+      labels:
+        channel: sk-cps-ops
+        severity: warning
+      annotations:
+        description: Pod {{$labels.pod}} in namespace {{$labels.namespace}} has a termination status other than completed.
+        summary: Pod was terminated status
     - alert: DaemonSetsMissScheduled
       expr: kube_daemonset_status_number_misscheduled > 0
       for: 10m
