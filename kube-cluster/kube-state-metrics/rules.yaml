@@ -97,3 +97,12 @@ spec:
       annotations:
         description: A number of daemonsets {{$labels.namespace}}/{{$labels.daemonset}} are running where they are not supposed to run.
         summary: Daemonsets are not scheduled correctly
+    - alert: K8SQuotaExceeded
+      expr: 100 * kube_resourcequota{job="kube-state-metrics", type="used"} / ignoring(instance, job, type) (kube_resourcequota{job="kube-state-metrics", type="hard"} > 0) > 90
+      for: 2m
+      labels:
+        channel: sk-cps-ops
+        severity: warning
+      annotations:
+        description: Namespace {{ $labels.namespace }} is using {{ printf "%0.0f" $value }}% of its {{ $labels.resource }} quota.
+        summary: Namespace Quota wil be Exceeded
