@@ -1,0 +1,23 @@
+- op: replace
+  path: /spec/resources/requests/memory
+  value: 1Gi
+
+- op: replace
+  path: /spec/storage/volumeClaimTemplate/spec/storageClassName
+  value: gp2 
+
+- op: replace
+  path: /spec/storage/volumeClaimTemplate/spec/resources/requests/storage
+  value: 20Gi
+
+- op: replace
+  path: /spec/retention
+  value: 15d
+
+- op: replace
+  path: /spec/externalLabels/provider
+  value: eks
+
+- op: replace
+  path: /spec/externalLabels/cluster
+  value: zunit-eks
