@@ -15,5 +15,9 @@
   value: 15d
 
 - op: replace
-  path: /spec/externalLabels/env
+  path: /spec/externalLabels/provider
+  value: gke
+
+- op: replace
+  path: /spec/externalLabels/cluster
   value: dev-cluster
