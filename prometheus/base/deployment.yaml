@@ -39,7 +39,7 @@ spec:
   retention: 15d
   scrapeInterval: 10s
   evaluationInterval: 10s
-  version: "v2.7.0"
+  version: "v2.8.0"
   securityContext:
     runAsUser: 0
   storage:
