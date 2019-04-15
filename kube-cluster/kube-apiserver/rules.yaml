@@ -20,7 +20,7 @@ spec:
             description: No API servers are reachable or all have disappeared from service discovery
             summary: No API servers are reachable
         - alert: APIServerErrorsHigh
-          expr: irate(apiserver_request_count{code=~"^(?:5..)$"}[5m]) / irate(apiserver_request_count[5m]) * 100 > 5
+          expr: sum(irate(apiserver_request_count{code=~"^(?:5..)$"}[5m])) / sum(irate(apiserver_request_count[5m])) * 100 > 5
           for: 2m
           labels:
             channel: sk-cps-ops
