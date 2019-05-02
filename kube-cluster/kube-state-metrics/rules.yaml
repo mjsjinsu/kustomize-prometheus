@@ -83,7 +83,7 @@ spec:
         summary: Pod is restarting frequently
         description: 'Pod {{ $labels.namespace }}/{{ $labels.pod }} is was restarted {{ $value }} times within the last hour'
     - alert: JobFailed
-      expr: sum_over_time(kube_job_status_failed{job="kube-state-metrics"}[1h]) > 0
+      expr: kube_job_status_failed{job="kube-state-metrics"} > 0
       labels:
         channel: sk-cps-ops
         severity: warning
