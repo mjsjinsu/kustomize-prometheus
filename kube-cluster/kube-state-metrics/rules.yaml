@@ -90,8 +90,8 @@ spec:
       annotations:
         description: Job '{{ $labels.namespace }}/{{ $labels.job }} has failed for some reason' 
         summary: Job has failed
-    - alert: PodStatusWaiting
-      expr: kube_pod_container_status_waiting_reason{reason!="ContainerCreating"} > 0 
+    - alert: PodImagePullError
+      expr: kube_pod_container_status_waiting_reason{reason!="ContainerCreating", reason="ErrImagePull"} > 0 
       labels:
         channel: sk-cps-ops
         severity: warning
