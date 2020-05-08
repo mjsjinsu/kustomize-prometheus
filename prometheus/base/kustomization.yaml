@@ -1,9 +1,15 @@
-namespace: monitoring 
-
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
-  - rbac.yaml
   - deployment.yaml
   - service.yaml
-  - servicemonitor.yaml
-  - rules.yaml
   - additional-scrape-configs.yaml
+  - prometheus-clusterRole.yaml
+  - prometheus-clusterRoleBinding.yaml
+  - prometheus-serviceAccount.yaml
+  - prometheus-roleBindingConfig.yaml
+  - prometheus-roleBindingSpecificNamespaces.yaml
+  - prometheus-roleConfig.yaml
+  - prometheus-roleSpecificNamespaces.yaml
+
+namespace: monitoring
