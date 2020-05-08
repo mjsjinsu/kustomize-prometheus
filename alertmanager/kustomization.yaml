@@ -7,6 +7,6 @@ resources:
   - alertmanager-secret.yaml
   - alertmanager-serviceAccount.yaml
   - alertmanager-ingress.yaml
-  - prometheus-rules-alertmanager
+  - prometheus-rules-alertmanager.yaml
 
 namespace: monitoring
