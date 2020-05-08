@@ -3,13 +3,21 @@ kind: ClusterRole
 metadata:
   name: prometheus-k8s
 rules:
-- apiGroups:
-  - ""
+- apiGroups: [""]
   resources:
-  - nodes/metrics
+  - nodes
+  - nodes/proxy
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - "extensions"
+  resources:
+  - ingresses
   verbs:
   - get
-- nonResourceURLs:
-  - /metrics
-  verbs:
-  - get
+  - list
+  - watch
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]

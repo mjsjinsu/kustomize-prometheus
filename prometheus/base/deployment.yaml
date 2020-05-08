@@ -14,7 +14,7 @@ spec:
   additionalScrapeConfigs:
     name: additional-scrape-configs 
     key: prometheus-additional.yaml
-  configMaps: {}
+  configMaps: []
   image: quay.io/prometheus/prometheus:v2.17.2
   nodeSelector:
     kubernetes.io/os: linux
@@ -49,7 +49,7 @@ spec:
   storage:
     volumeClaimTemplate:
       spec:
-        storageClassName: default
+        storageClassName: nks-block-storage
         resources:
           requests:
-            storage: 50Gi
+            storage: 20Gi

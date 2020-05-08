@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - service.yaml
+  - ingress.yaml
   - additional-scrape-configs.yaml
   - prometheus-clusterRole.yaml
   - prometheus-clusterRoleBinding.yaml
