@@ -1,10 +1,15 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: grafana
   name: grafana
-  namespace: kube-system 
+  namespace: monitoring
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
   template:
     metadata:
       labels:
@@ -14,31 +19,29 @@ spec:
         runAsUser: 472
         fsGroup: 472
       containers:
-      - image: grafana/grafana:5.4.3
+      - image: grafana/grafana:7.0.0-beta2
         name: grafana
         resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
           requests:
             cpu: 100m
-            memory: 100Mi        
+            memory: 512Mi        
         env:
         - name: GF_SECURITY_ADMIN_USER
           value: admin
         - name: GF_SECURITY_ADMIN_PASSWORD
           value: admin
         - name: GF_INSTALL_PLUGINS
-          value: grafana-clock-panel,grafana-worldmap-panel
+          value: "grafana-clock-panel,grafana-worldmap-panel,agenty-flowcharting-panel,grafana-polystat-panel,vonage-status-panel,blackmirror1-statusbygroup-panel,snuids-trafficlights-panel,yesoreyeram-boomtable-panel,camptocamp-prometheus-alertmanager-datasource"
+        - name: GF_PANELS_DISABLE_SANITIZE_HTML
+          value: "true"
         ports:
         - containerPort: 3000
-          name: grafana
-          protocol: TCP
+          name: http
         livenessProbe:
           failureThreshold: 3
           httpGet:
             path: /api/health
-            port: 3000
+            port: http
             scheme: HTTP
           initialDelaySeconds: 30
           periodSeconds: 10
@@ -48,7 +51,7 @@ spec:
           failureThreshold: 3
           httpGet:
             path: /api/health
-            port: 3000
+            port: http
             scheme: HTTP
           initialDelaySeconds: 30
           periodSeconds: 10
@@ -57,8 +60,10 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/grafana
           name: grafana-storage
+          readOnly: false
         - mountPath: /etc/grafana
           name: config-volume
+          readOnly: false
         - mountPath: /var/lib/grafana/dashboards/system
           name: dashboard-system-volume
         - mountPath: /var/lib/grafana/dashboards/cluster
