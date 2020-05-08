@@ -5,7 +5,7 @@ global:
 
   # The smarthost and SMTP sender used for mail notifications.
   smtp_smarthost: 'smtp.sendgrid.net:587'
-  smtp_from: 'alertmanager@zcp.com'
+  smtp_from: 'alertmanager@example.com'
   smtp_auth_username: 'foo@bar.com'
   smtp_auth_password: 'barfoo'
   smtp_auth_secret: 'foobar'
@@ -56,21 +56,21 @@ route:
 
   # The child route trees.
   routes:
-  - receiver: sk-cps-ops
+  - receiver: cloud-ops
     match_re:
-      channel: sk-cps-ops
+      channel: cloud-ops
     routes:
     - receiver: default
       match:
         severity: warning
-    - receiver: sk-cps-ops
+    - receiver: cloud-ops
       match:
         severity: critical
 
 receivers:
 - name: 'default'
 
-- name: 'sk-cps-ops'
+- name: 'cloud-ops'
   slack_configs:
-  - api_url: 'https://hooks.slack.com/services/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'
+  - api_url: 'https://hooks.slack.com/zzzz'
     send_resolved: true

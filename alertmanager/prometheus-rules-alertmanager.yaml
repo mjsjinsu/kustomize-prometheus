@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: rule-alertmanager
+  namespace: monitoring
+spec:
+  groups:
+    - name: alertmanager.rules
+      rules:
+        - alert: AlertmanagerNotificationsFailing 
+          expr: rate(alertmanager_notifications_failed_total[2m]) > 0
+          for: 2m
+          labels:
+            channel: sk-cps-ops
+            severity: critical
+          annotations:
+            description: Alertmanager is seeing errors for integration {{$labels.integration}}
+            summary: Alertmanager is failing sending notications
+        - alert: AlertmanagerFailedReload 
+          expr: alertmanager_config_last_reload_successful{job="alertmanager"} == 0
+          for: 10m
+          labels:
+            channel: sk-cps-ops
+            severity: warning
+          annotations:
+            description: 'Reloading Alertmanager configuration has failed for {{ $labels.namespace }}/{{ $labels.pod }}'
+            summary: Reloading Alertmanager's configuration has failed

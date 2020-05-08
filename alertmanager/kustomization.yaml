@@ -1,8 +1,12 @@
-namespace: zcp-system 
-
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
-  - deployment.yaml
-  - service.yaml
-  - servicemonitor.yaml
-  - rules.yaml
-  - secret-alertmanager.yaml 
+  - alertmanager-alertmanager.yaml
+  - alertmanager-service.yaml
+  - alertmanager-serviceMonitor.yaml
+  - alertmanager-secret.yaml
+  - alertmanager-serviceAccount.yaml
+  - alertmanager-ingress.yaml
+  - prometheus-rules-alertmanager
+
+namespace: monitoring
